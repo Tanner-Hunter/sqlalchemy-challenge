@@ -47,7 +47,7 @@ def precipitation():
 
     results=session.query(Measurement.date,Measurement.prcp).all()
     session.close()
-
+# Create a dictionary from data and append list
     precipitation = []
     for date,prcp in results:
         prcp_dict = {}
@@ -60,11 +60,14 @@ def precipitation():
 #create a station route
 @app.route('/api/v1.0/stations')
 def stations():
-    
+    #create session
     session = Session(engine)
+    
     results = session.query(Station.name,Station.station).all()
     session.close()
+
     all_stations = list(np.ravel(results))
+
     return jsonify(all_stations)
 
 #create tobs route
@@ -72,11 +75,15 @@ def stations():
 def tobs():
 
     session = Session(engine)
+
     recent_year = dt.date(2017, 8, 23) - dt.timedelta(days=365)
+
     tobs = session.query(Measurement.tobs, Measurement.date).filter(Measurement.date >= recent_year).all()
     session.close()
 
+
     tobs_data = list(np.ravel(tobs))
+    
     return jsonify(tobs_data)
 
 
